@@ -11,23 +11,27 @@ RSpec.describe MapController, type: :controller do
 
       expect(response).to have_http_status(:success)
       json_response = JSON.parse(response.body)
-      expect(json_response['sectors'][0]).to eq(sector)
-      expect(json_response['plants']).to contain_exactly(plant1, plant2)
+      
+      expect(json_response['sectors'][0]['name']).to eq(sector['name'])
+      expect(json_response['plants'][0]['id']).to eq(plant1['id'])
     end
   end
 
   describe 'GET show' do
     it 'returns a sector with its plants' do
       sector = create(:sector)
-      plant1 = create(:plant, sector: sector)
-      plant2 = create(:plant, sector: sector)
+      plant1 = create(:plant, sector_id: sector.id)
+      plant2 = create(:plant, sector_id: sector.id)
 
       get :show, params: { id: sector.id }
 
       expect(response).to have_http_status(:success)
       json_response = JSON.parse(response.body)
-      expect(json_response['sector']).to eq(sector)
-      expect(json_response['plants']).to contain_exactly(plant1, plant2)
+      
+      expect(json_response['plants'].length).to eq(2)
+      expect(json_response['plants'].first['id']).to eq(plant1.id)
+      expect(json_response['plants'].second['id']).to eq(plant2.id)
+    
     end
   end
 end

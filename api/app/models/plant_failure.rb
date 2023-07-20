@@ -1,0 +1,2 @@
+class PlantFailure < ApplicationRecord
+end

@@ -32,8 +32,8 @@ export function Map({
       .select('.map-container')
       .append('svg')
       .attr('height', 1200)
-      .attr('width', 500)
-      .attr('viewBox', '0 0 500 1200');
+      .attr('width', 2400)
+      .attr('viewBox', '0 0 900 2400');
 
     const g = svg.append('g').attr('class', 'g');
 
@@ -98,9 +98,8 @@ export function Map({
 
   return (
     <Wrapper className="wrapper">
-      <Container className="container">
-        {plant && <InfoPanel plant={plant} />}
-      </Container>
+      {plant && <InfoPanel plant={plant} />}
+
       <MapContainer className="map-container"></MapContainer>
     </Wrapper>
   );

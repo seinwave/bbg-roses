@@ -6,13 +6,13 @@ export const Wrapper = styled.div`
   flex-direction: row;
   gap: 1rem;
   padding: 3rem;
+  width: 100%;
 `;
 
 export const Container = styled.div`
-  width: 45vw;
+  width: 100%;
 `;
 
 export const MapContainer = styled(Container)`
-  border: solid 1px blue;
   overflow: hidden;
 `;

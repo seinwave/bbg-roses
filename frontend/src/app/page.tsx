@@ -21,9 +21,5 @@ async function getData() {
 
 export default async function Home() {
   const { sectors, plants } = await getData();
-  return (
-    <main className={styles.main}>
-      <Map sectors={sectors} plants={plants} />
-    </main>
-  );
+  return <Map sectors={sectors} plants={plants} />;
 }

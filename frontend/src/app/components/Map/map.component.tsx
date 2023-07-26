@@ -28,12 +28,21 @@ export function Map({
   });
 
   useEffect(() => {
+    const width =
+      window.innerWidth ||
+      document.documentElement.clientWidth ||
+      document.body.clientWidth;
+    const height =
+      window.innerHeight ||
+      document.documentElement.clientHeight ||
+      document.body.clientHeight;
+
     const svg = d3
       .select('.map-container')
       .append('svg')
-      .attr('height', 1200)
-      .attr('width', 2400)
-      .attr('viewBox', '0 0 900 2400');
+      .attr('height', '100%')
+      .attr('width', '100%')
+      .attr('viewBox', `0 0 2400 1200`);
 
     const g = svg.append('g').attr('class', 'g');
 
@@ -45,7 +54,7 @@ export function Map({
     const allProjection = d3
       .geoMercator()
       .rotate([73, -21, 14.2])
-      .fitSize([900, 1200], allSectors);
+      .fitSize([width, height], allSectors);
     const allPath = d3.geoPath().projection(allProjection);
 
     sectorObjects.forEach((sectorObject) => {
@@ -78,8 +87,6 @@ export function Map({
           .attr('fill', 'purple');
       });
 
-      const circle = d3.select(`#${plant?.id}`);
-
       function zoomed({ transform }: { transform: any }) {
         //TODO: how much to show or not?
         //TODO: can that be handled with the `tile` library? (vs zoom)
@@ -87,7 +94,7 @@ export function Map({
       }
 
       d3.select('.wrapper').call(
-        d3.zoom().scaleExtent([1, 5]).on('zoom', zoomed)
+        d3.zoom().scaleExtent([2, 21]).on('zoom', zoomed)
       );
     });
     return () => {
@@ -98,8 +105,6 @@ export function Map({
 
   return (
     <Wrapper className="wrapper">
-      {plant && <InfoPanel plant={plant} />}
-
       <MapContainer className="map-container"></MapContainer>
     </Wrapper>
   );

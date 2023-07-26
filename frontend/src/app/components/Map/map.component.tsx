@@ -1,58 +1,11 @@
 'use client';
 import * as d3 from 'd3';
 import { useEffect, useState } from 'react';
-import styled from 'styled-components';
-import InfoPanel from './components/InfoPanel';
+import InfoPanel from '../InfoPanel';
+import { Wrapper, Container, MapContainer } from './map.style';
+import { type Sector, type Plant, type SectorObject } from '@/types/models';
 
-const Wrapper = styled.div`
-  color: green;
-  display: flex;
-  flex-direction: row;
-  gap: 1rem;
-  padding: 3rem;
-`;
-
-const Container = styled.div`
-  width: 45vw;
-`;
-
-const MapContainer = styled(Container)`
-  border: solid 1px blue;
-  overflow: hidden;
-`;
-
-interface Sector {
-  id: number;
-  name: string;
-  coordinates: [number[], number[], number[], number[]];
-  geojson_string: string;
-}
-
-export interface Plant {
-  id: number;
-  name: string;
-  sector_id: number;
-  cultivar_id: number;
-  latitude: number;
-  longitude: number;
-  form: number;
-  status?: number;
-  is_deleted?: boolean;
-  created_at: string;
-  updated_at: string;
-}
-
-interface SectorObject {
-  type: string;
-  properties: { name: string };
-  geometry: {
-    type: string;
-    coordinates: [number[], number[], number[], number[]];
-  };
-  geometries: Array<any>;
-}
-
-export default function Map({
+export function Map({
   sectors,
   plants,
 }: {
@@ -75,12 +28,21 @@ export default function Map({
   });
 
   useEffect(() => {
+    const width =
+      window.innerWidth ||
+      document.documentElement.clientWidth ||
+      document.body.clientWidth;
+    const height =
+      window.innerHeight ||
+      document.documentElement.clientHeight ||
+      document.body.clientHeight;
+
     const svg = d3
       .select('.map-container')
       .append('svg')
-      .attr('height', 1200)
-      .attr('width', 500)
-      .attr('viewBox', '0 0 500 1200');
+      .attr('height', '100%')
+      .attr('width', '100%')
+      .attr('viewBox', `0 0 2400 1200`);
 
     const g = svg.append('g').attr('class', 'g');
 
@@ -92,7 +54,7 @@ export default function Map({
     const allProjection = d3
       .geoMercator()
       .rotate([73, -21, 14.2])
-      .fitSize([900, 1200], allSectors);
+      .fitSize([width, height], allSectors);
     const allPath = d3.geoPath().projection(allProjection);
 
     sectorObjects.forEach((sectorObject) => {
@@ -125,8 +87,6 @@ export default function Map({
           .attr('fill', 'purple');
       });
 
-      const circle = d3.select(`#${plant?.id}`);
-
       function zoomed({ transform }: { transform: any }) {
         //TODO: how much to show or not?
         //TODO: can that be handled with the `tile` library? (vs zoom)
@@ -134,7 +94,7 @@ export default function Map({
       }
 
       d3.select('.wrapper').call(
-        d3.zoom().scaleExtent([1, 5]).on('zoom', zoomed)
+        d3.zoom().scaleExtent([2, 21]).on('zoom', zoomed)
       );
     });
     return () => {
@@ -145,9 +105,6 @@ export default function Map({
 
   return (
     <Wrapper className="wrapper">
-      <Container className="container">
-        {plant && <InfoPanel plant={plant} />}
-      </Container>
       <MapContainer className="map-container"></MapContainer>
     </Wrapper>
   );

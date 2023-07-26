@@ -1,5 +1,5 @@
 import styles from './page.module.css';
-import Map from './map';
+import Map from './components/Map';
 import InfoPanel from './components/InfoPanel';
 
 async function getData() {
@@ -21,9 +21,5 @@ async function getData() {
 
 export default async function Home() {
   const { sectors, plants } = await getData();
-  return (
-    <main className={styles.main}>
-      <Map sectors={sectors} plants={plants} />
-    </main>
-  );
+  return <Map sectors={sectors} plants={plants} />;
 }
